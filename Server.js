@@ -2,8 +2,8 @@ var express     =   require("express");
 var app         =   express();
 var bodyParser  =   require("body-parser");
 var obj_users     =   require("./models/usersschema");
-var obj_project    =   require("./models/projectschema");
-var obj_school = require("./models/schoolSchema");
+//var obj_project    =   require("./models/projectschema");
+//var obj_school = require("./models/schoolSchema");
 var router      =   express.Router();
 var dt = new Date().toUTCString()
 
@@ -11,11 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
 
 
-
-
-
-
-
+/*
   router.route("/register")
    .get(function(req,res){
        var response = {};
@@ -26,7 +22,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
            res.json(response);
        });
    })
- 
+ */
  var usr_id;
      
      router.route("/register")
@@ -55,11 +51,8 @@ app.use(bodyParser.urlencoded({"extended" : false}));
              console.log("here",usr_id)
             res.json(response);
         });
-        
-         
-
 })     
-
+/*
 	router.route("/addusrinsch")
      .post(function(req,res){
 	var db1 = new obj_school();
@@ -238,6 +231,8 @@ router.route("/login")
             }
         });
     })
+    
+    */
 
 app.use('/',router);
 
