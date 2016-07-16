@@ -2,8 +2,8 @@ var express     =   require("express");
 var app         =   express();
 var bodyParser  =   require("body-parser");
 var obj_users     =   require("./models/usersschema");
-//var obj_project    =   require("./models/projectschema");
-//var obj_school = require("./models/schoolSchema");
+var obj_project    =   require("./models/projectschema");
+var obj_school = require("./models/schoolSchema");
 var router      =   express.Router();
 var dt = new Date().toUTCString()
 
