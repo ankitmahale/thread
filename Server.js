@@ -11,18 +11,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
 
 
-/*
+
   router.route("/register")
    .get(function(req,res){
        var response = {};
-       obj_schools.find({ "sch_name": "School1"}, {'sch_name': 1,'sch_city' : 1,'sch_state' : 1, '_id' : 1},function(err,data){
+       obj_users.find({ "sch_name": "School1"}, {'sch_name': 1,'sch_city' : 1,'sch_state' : 1, '_id' : 1},function(err,data){
            
                response = data;
           
            res.json(response);
        });
    })
- */
+ 
 // var usr_id;
      
      router.route("/register")
