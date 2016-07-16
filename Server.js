@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
        });
    })
  
-// var usr_id;
+ var usr_id;
      
      router.route("/register")
      .post(function(req,res){
@@ -52,7 +52,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
             res.json(response);
         });
 })     
-/*
+
 	router.route("/addusrinsch")
      .post(function(req,res){
 	var db1 = new obj_school();
@@ -95,7 +95,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
            if(err) {
                response = {"error" : true,"message" : "Error fetching data"};
            } else {
-               response = {data};
+               response = data;
            }
            res.json(response);
        });
@@ -232,9 +232,9 @@ router.route("/login")
         });
     })
     
-    */
+    
 
-//app.use('/',router);
+app.use('/',router);
 
 var port= process.env.PORT || 3000;
 app.listen(port);
