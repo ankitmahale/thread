@@ -234,7 +234,7 @@ router.route("/login")
     
     */
 
-app.use('/',router);
+//app.use('/',router);
 
 var port= process.env.PORT || 3000;
 app.listen(port);
