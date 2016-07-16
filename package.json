@@ -1,5 +1,4 @@
 {
-  "start":"node Server.json"
   "name": "nodeMongo",
   "version": "1.0.0",
   "description": "Node.js and MongoDb tutorial.",
