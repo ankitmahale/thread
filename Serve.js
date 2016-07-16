@@ -14,12 +14,12 @@ app.use(bodyParser.urlencoded({"extended" : false}));
 
 
 
-/*
+
 
   router.route("/register")
    .get(function(req,res){
        var response = {};
-       obj_school.find({},function(err,data){
+       obj_users.find({},function(err,data){
            
                response = data;
           
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
        });
    })
 
-  */   
+    
      router.route("/register")
      .post(function(req,res){
         var db = new obj_users();    
