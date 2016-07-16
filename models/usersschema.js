@@ -1,5 +1,6 @@
 var mongoose    =   require("mongoose");
-mongoose.connect('mongodb://thread:thread123@ds023105.mlab.com:23105/heroku_czld3m55');
+mongoose.connect('mongodb://threadsapp:threads123@ds049935.mlab.com:49935/threads');
+
 var mongoSchema =   mongoose.Schema;
 var userSchema  = {
     "usr_img" : String,

@@ -236,6 +236,6 @@ router.route("/login")
 
 app.use('/',router);
 
-
-//app.listen(3000);
-console.log("Listening to PORT 3000");
+var port= process.env.PORT || 3000;
+app.listen(port);
+console.log("Listening on PORT " + port );
