@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
        });
    })
  */
- var usr_id;
+// var usr_id;
      
      router.route("/register")
      .post(function(req,res){
@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
         db.usr_lname = req.body.lname;
         db.usr_img = req.body.img;
         db.usr_dob = req.body.dob;
-        db.usr_created = new Date().toUTCString(as);
+        db.usr_created = new Date().toUTCString();
        	db.usr_passion = req.body.passion;
        	db.usr_projs = req.body.proj_id;
        	db.usr_school = req.body.school;
@@ -47,8 +47,8 @@ app.use(bodyParser.urlencoded({"extended" : false}));
             } else {
                 response = {"error" : false,"message" : "Data added"+ val._id};
             }
-             usr_id=val._id;
-             console.log("here",usr_id)
+            // usr_id=val._id;
+            // console.log("here",usr_id)
             res.json(response);
         });
 })     
