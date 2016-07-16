@@ -2,8 +2,8 @@ var express     =   require("express");
 var app         =   express();
 var bodyParser  =   require("body-parser");
 var obj_users     =   require("./models/usersschema");
-var obj_project    =   require("./models/projectschema");
-var obj_school = require("./models/schoolSchema");
+//var obj_project    =   require("./models/projectschema");
+//var obj_school = require("./models/schoolSchema");
 var router      =   express.Router();
 var dt = new Date().toUTCString()
 
@@ -11,52 +11,28 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
 
 
-router.route("/ankit")
-     .post(function(req,res){
-        var db = new obj_users();    
-        var response = {};
-        db._id = req.body.id;
-        db.usr_email = req.body.email;
-        db.save(function(err,val){
-            if(err) {
-                response = {"error" : true,"message" : "Error adding data"};
-            } else {
-                response = {"error" : false,"message" : "Data added"+ val._id};
-            }
-            
-            res.json(response);
-        });
-})     
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
 
+
+/*
 
   router.route("/register")
    .get(function(req,res){
        var response = {};
-       obj_users.find({},function(err,data){
+       obj_school.find({},function(err,data){
            
                response = data;
           
            res.json(response);
        });
    })
- 
- var usr_id;
-     
+
+  */   
      router.route("/register")
      .post(function(req,res){
         var db = new obj_users();    
         var response = {};
-        db._id = req.body.id;
+        
         db.usr_email = req.body.email;
         db.usr_pwd = req.body.password;
         db.usr_fname = req.body.fname;
@@ -72,14 +48,16 @@ router.route("/ankit")
             if(err) {
                 response = {"error" : true,"message" : "Error adding data"};
             } else {
-                response = {"error" : false,"message" : "Data added"+ val._id};
+                response = {"error" : false,"message" : "Data added"};
             }
-            // usr_id=val._id;
-            // console.log("here",usr_id)
+            
             res.json(response);
         });
-})     
+        
+         
 
+})     
+/*
 	router.route("/addusrinsch")
      .post(function(req,res){
 	var db1 = new obj_school();
@@ -122,7 +100,7 @@ router.route("/ankit")
            if(err) {
                response = {"error" : true,"message" : "Error fetching data"};
            } else {
-               response = data;
+               response = {data};
            }
            res.json(response);
        });
@@ -259,10 +237,10 @@ router.route("/login")
         });
     })
     
-    
+*/    
 
 app.use('/',router);
 
-var port= process.env.PORT || 3000;
-app.listen(port);
-console.log("Listening on PORT 3000");
+
+app.listen(3000);
+console.log("Listening to PORT 3000");
