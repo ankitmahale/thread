@@ -8,6 +8,7 @@ var userSchema  = {
     "usr_pwd" : String,
     "usr_fname" : String,
     "usr_lname" : String,
+    "usr_username" : String,
     "usr_dob" : String,
     "usr_created" : String,
     "usr_passion" : [],
