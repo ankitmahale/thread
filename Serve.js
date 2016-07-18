@@ -12,14 +12,31 @@ app.use(bodyParser.urlencoded({"extended" : false}));
 
 
 
-
-
-
-
-  router.route("/register")
+   
+   
+   router.route("/uniqueusername")
    .get(function(req,res){
        var response = {};
-       obj_users.find({},function(err,data){
+       obj_users.find({"usr_username": req.query.usr_username},{"usr_username":1},function(err,data){
+       response = data;
+       res.json(response);
+       });
+   })
+   
+   router.route("/uniqueemail")
+   .get(function(req,res){
+       var response = {};
+       obj_users.find({"usr_email": req.query.usr_email},{"usr_email":1},function(err,data){
+       response = data;
+       res.json(response);
+       });
+   })
+
+
+  router.route("/userdetails")
+   .get(function(req,res){
+       var response = {};
+       obj_users.find({"_id" : req.query.usr_id},function(err,data){
            
                response = data;
           
@@ -32,17 +49,16 @@ app.use(bodyParser.urlencoded({"extended" : false}));
      .post(function(req,res){
         var db = new obj_users();    
         var response = {};
-        
         db.usr_email = req.body.email;
         db.usr_pwd = req.body.password;
         db.usr_fname = req.body.fname;
         db.usr_lname = req.body.lname;
         db.usr_img = req.body.img;
+        db.usr_username = req.body.username;
         db.usr_dob = req.body.dob;
         db.usr_created = new Date().toUTCString();
        	db.usr_passion = req.body.passion;
-       	db.usr_projs = req.body.proj_id;
-       	db.usr_school = req.body.school;
+      
        	
         db.save(function(err,val){
             if(err) {
@@ -53,10 +69,76 @@ app.use(bodyParser.urlencoded({"extended" : false}));
             
             res.json(response);
         });
-        
-         
+  
+})    
 
-})     
+      router.route("/updateuserdetails")
+      .put(function(req,res){
+        var response = {};
+        obj_users.findById(req.params.usr_id,function(err,data){
+            if(err) {
+                response = {"error" : true,"message" : "Error fetching data"};
+            } else {
+                
+                data.usr_email = req.query.usr_email;
+                data.usr_fname = req.query.usr_fname;
+       		    data.usr_lname = req.query.usr_lname;
+                data.usr_img = req.query.usr_img;
+                data.usr_passion = req.body.usr_passion;
+                
+                
+                
+                data.save(function(err){
+                    if(err) {
+                        response = {"error" : true,"message" : "Error updating data"};
+                    } else {
+                        response = {"error" : false, "message" : "Data is updated for "+req.params.id};
+                    }
+                    res.json(response);
+                })
+            }
+        });
+    })
+
+router.route("/deleteuser")
+.delete(function(req,res){
+        var response = {};
+       
+        obj_users.find({"_id": req.query.usr_id },function(err,data){
+        if(err) {
+                response = {"error" : true,"message" : "Error fetching data!"};
+            }
+         if(data==null) {
+                response = {"error" : true,"message" : "Data not found!"};
+            }   
+        if(!err && data!=null)
+        {
+              response={response , "error" : false ,"message" : "Successfully deleted!"};
+        }    
+        res.json(response);
+        
+        }).remove().exec();
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 	router.route("/addusrinsch")
      .post(function(req,res){
