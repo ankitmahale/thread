@@ -11,20 +11,65 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
 
 
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+var configDB = require('./config/database.js');
+
+// configuration ===============================================================
+mongoose.connect(configDB.url); // connect to our database
+
+
+require('./config/passport')(passport); // pass passport for configuration
+
+app.configure(function() {
+
+	// set up our express application
+	app.use(express.logger('dev')); // log every request to the console
+	app.use(express.cookieParser()); // read cookies (needed for auth)
+	app.use(express.bodyParser()); // get information from html forms
+
+	app.set('view engine', 'ejs'); // set up ejs for templating
+
+	// required for passport
+	app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+	app.use(passport.initialize());
+	app.use(passport.session()); // persistent login sessions
+	app.use(flash()); // use connect-flash for flash messages stored in session
+
+});
+
+// routes ======================================================================
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
+
+
+
+
+
+
+
+
+
+
+
 
    
    
-   router.route("/uniqueusername")
-   .get(function(req,res){
+   
+   app.get('/uniqueusername',function(req,res){
        var response = {};
        obj_users.find({"usr_username": req.query.usr_username},{"usr_username":1},function(err,data){
        response = data;
        res.json(response);
        });
    })
+ 
+ 
    
-   router.route("/uniqueemail")
-   .get(function(req,res){
+   
+   app.get("/uniqueemail",function(req,res){
        var response = {};
        obj_users.find({"usr_email": req.query.usr_email},{"usr_email":1},function(err,data){
        response = data;
@@ -33,8 +78,8 @@ app.use(bodyParser.urlencoded({"extended" : false}));
    })
 
 
-  router.route("/userdetails")
-   .get(function(req,res){
+  
+   app.get("/userdetails",function(req,res){
        var response = {};
        obj_users.find({"_id" : req.query.usr_id},function(err,data){
            
@@ -44,7 +89,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
        });
    })
 
-    
+  /*  
      router.route("/register")
      .post(function(req,res){
         var db = new obj_users();    
@@ -71,9 +116,9 @@ app.use(bodyParser.urlencoded({"extended" : false}));
         });
   
 })    
-
-      router.route("/updateuserdetails")
-      .put(function(req,res){
+*/
+    
+      app.put('/updateuserdetails',function(req,res){
         var response = {};
         obj_users.findById(req.params.usr_id,function(err,data){
             if(err) {
@@ -100,8 +145,8 @@ app.use(bodyParser.urlencoded({"extended" : false}));
         });
     })
 
-router.route("/deleteuser")
-.delete(function(req,res){
+
+        app.delete('/deleteuser',function(req,res){
         var response = {};
        
         obj_users.find({"_id": req.query.usr_id },function(err,data){
@@ -321,7 +366,7 @@ router.route("/login")
     
 */    
 
-app.use('/',router);
+//app.use('/',router);
 
 
 app.listen(process.env.PORT || 3000, function () {
