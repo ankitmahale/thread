@@ -2,7 +2,7 @@ var express     =   require("express");
 var app         =   express();
 var bodyParser  =   require("body-parser");
 var obj_users     =   require("./models/usersschema");
-//var obj_project    =   require("./models/projectschema");
+var obj_project    =   require("./models/projectschema");
 //var obj_school = require("./models/schoolSchema");
 var router      =   express.Router();
 var dt = new Date().toUTCString()
@@ -164,6 +164,36 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
         
         }).remove().exec();
     })
+    
+   
+     app.post('/addproject', function(req,res){
+        var db = new obj_project();    
+        var response = {};
+        db.proj_name = req.body.proj_name;
+        db.proj_created = new Date().toUTCString();
+        db.proj_desc = req.body.proj_desc;
+        db.proj_category = req.body.proj_category;
+        db.proj_team_members = req.body.proj_team_members;
+        db.proj_cover_img = req.body.proj_cover_img;
+        db.proj_privacy = req.body.proj_privacy;
+        db.proj_posts= req.body.proj_posts;
+      
+       	
+        db.save(function(err,val){
+            if(err) {
+                response = {"error" : true,"message" : "Error adding data"};
+            } else {
+                response = {"error" : false,"message" : "Data added"};
+            }
+            
+            res.json(response);
+        });
+  
+})    
+    
+    
+    
+    
 
 
 
