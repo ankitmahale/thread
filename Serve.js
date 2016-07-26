@@ -46,22 +46,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 
 
 
-
-
-
-
-
-
-
-
-
-   
-   
-   
    app.get('/uniqueusername',function(req,res){
        var response = {};
        obj_users.find({"usr_username": req.query.usr_username},{"usr_username":1},function(err,data){
-       response = data;
+        if(err) {
+                response = {"success" : false,"message" : "Error fetching Username"};
+            } else {
+                response = {"success" : true, "message" : data};
+            }
        res.json(response);
        });
    })
@@ -72,7 +64,13 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
    app.get("/uniqueemail",function(req,res){
        var response = {};
        obj_users.find({"usr_email": req.query.usr_email},{"usr_email":1},function(err,data){
-       response = data;
+        if(err) {
+                response = {"success" : false,"message" : "Error fetching email"};
+            } else {
+                response = {"success" : true, "message" : data};
+            }
+       
+       
        res.json(response);
        });
    })
@@ -82,8 +80,12 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
    app.get("/userdetails",function(req,res){
        var response = {};
        obj_users.find({"_id" : req.query.usr_id},function(err,data){
-           
-               response = data;
+         if(err) {
+                response = {"success" : false,"message" : "Error adding data"};
+            } else {
+                response = {"success" : true, "message" : data};
+            }   
+               
           
            res.json(response);
        });
@@ -122,7 +124,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
         var response = {};
         obj_users.findById(req.params.usr_id,function(err,data){
             if(err) {
-                response = {"error" : true,"message" : "Error fetching data"};
+                response = {"success" : false,"message" : "Error fetching the user id"};
             } else {
                 
                 data.usr_email = req.query.usr_email;
@@ -135,9 +137,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
                 
                 data.save(function(err){
                     if(err) {
-                        response = {"error" : true,"message" : "Error updating data"};
+                        response = {"success" : false,"message" : "Error updating data"};
                     } else {
-                        response = {"error" : false, "message" : "Data is updated for "+req.params.id};
+                        response = {"success" : true, "message" : "Data is updated for "+req.params.id};
                     }
                     res.json(response);
                 })
@@ -151,14 +153,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        
         obj_users.find({"_id": req.query.usr_id },function(err,data){
         if(err) {
-                response = {"error" : true,"message" : "Error fetching data!"};
+                response = {"success" : false,"message" : "Error deleting user!"};
             }
          if(data==null) {
-                response = {"error" : true,"message" : "Data not found!"};
+                response = {"success" : false,"message" : "User not found!"};
             }   
         if(!err && data!=null)
         {
-              response={response , "error" : false ,"message" : "Successfully deleted!"};
+              response={response , "success" : true ,"message" : "Successfully deleted!"};
         }    
         res.json(response);
         
@@ -177,19 +179,182 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
         db.proj_cover_img = req.body.proj_cover_img;
         db.proj_privacy = req.body.proj_privacy;
         db.proj_posts= req.body.proj_posts;
-      
+        db.proj_updated = new Date().toUTCString();
        	
         db.save(function(err,val){
             if(err) {
-                response = {"error" : true,"message" : "Error adding data"};
+                response = {"success" : false,"message" : "Error adding data"};
             } else {
-                response = {"error" : false,"message" : "Data added"};
+                response = {"success" : true,"message" : val._id};
             }
             
             res.json(response);
         });
   
 })    
+        
+        app.get("/projectdetails",function(req,res){
+       var response = {};
+       obj_project.find({"_id": req.query.proj_id},function(err,data){
+       
+       if(err) {
+                response = {"success" : false,"message" : "Error adding data"};
+            } else {
+                response = {"success" : true, "message" : data};
+            }
+       
+       res.json(response);
+       });
+    })
+    
+       
+     
+      app.put('/updateprojectdetails',function(req,res){
+        var response = {};
+        obj_project.findById(req.query.proj_id,function(err,data){
+            if(err) {
+                response = {"success" : false,"message" : "Error finding the project id"};
+            } else {
+                
+                data.proj_name = req.body.proj_name;
+                data.proj_desc = req.body.proj_desc;
+       		    data.proj_category = req.body.proj_category;
+                data.proj_cover_img = req.body.proj_cover_img;
+                data.proj_privacy= req.body.proj_privacy;
+                data.proj_team_members = req.body.proj_team_members;
+                data.proj_updated= new Date().toUTCString();
+                
+                
+                data.save(function(err){
+                    if(err) {
+                        response = {"success" : false,"message" : "Error updating project data"};
+                    } else {
+                        response = {"success" : true, "message" : "Project Data is updated for "+ req.query.proj_id};
+                    }
+                    res.json(response);
+                })
+            }
+        });
+    })
+    
+    
+    app.delete('/deleteproject',function(req,res){
+        var response = {};
+       
+        obj_project.find({"_id": req.query.proj_id},function(err,data){
+        if(err) {
+                response = {"success" : false,"message" : "Error deleting project!"};
+            }
+         if(data==null) {
+                response = {"success" : false,"message" : "Project not found!"};
+            }   
+        if(!err && data!=null)
+        {
+              response={response , "success" : true ,"message" : "Successfully deleted!"};
+        }    
+        res.json(response);
+        
+        }).remove().exec();
+    })
+      
+      
+     app.put("/addteammembers",function(req,res){
+       var response = {};
+     
+       obj_project.update(
+       {"_id" : req.body.proj_id},{$push:{"proj_team_members":
+        {
+            "proj_usr_id" : req.body.proj_usr_id
+        }
+    }},function(err,data){
+       
+       if(err) {
+                response = {"success" : false,"message" : "Error updating team members"};
+            } else {
+                
+                
+                response = {"success" : true, "message" : data};
+                
+                
+            }
+       
+       res.json(response);
+       });
+    }) 
+    
+     app.put("/deleteteammembers",function(req,res){
+       var response = {};
+     
+       obj_project.update(
+       {"_id" : req.body.proj_id},{$pull:{"proj_team_members":
+        {
+            "proj_usr_id" : req.body.proj_usr_id
+        }
+    }},function(err,data){
+       
+       if(err) {
+                response = {"success" : false,"message" : "Error updating team members"};
+            } else {
+                
+                
+                response = {"success" : true, "message" : data};
+                
+                
+            }
+       
+       res.json(response);
+       });
+    }) 
+    
+    
+    app.put("/addprojectinuser",function(req,res){
+       var response = {};
+     
+       obj_users.update(
+       {"_id" : req.body.usr_id},{$push:{"usr_projs":
+        {
+            "proj_id" : req.body.proj_id
+        }
+    }},function(err,data){
+       
+       if(err) {
+                response = {"success" : false,"message" : "Error updating team members"};
+            } else {
+                
+                
+                response = {"success" : true, "message" : data};
+                
+                
+            }
+       
+       res.json(response);
+       });
+    })
+    
+    app.put("/deleteprojectfromuser",function(req,res){
+       var response = {};
+     
+       obj_users.update(
+       {"_id" : req.body.usr_id},{$pull:{"usr_projs":
+        {
+            "proj_id" : req.body.proj_id
+        }
+    }},function(err,data){
+       
+       if(err) {
+                response = {"success" : false,"message" : "Error updating team members"};
+            } else {
+                
+                
+                response = {"success" : true, "message" : data};
+                
+                
+            }
+       
+       res.json(response);
+       });
+    })
+
     
     
     

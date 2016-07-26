@@ -3,6 +3,7 @@ var mongoSchema =   mongoose.Schema;
 var projectSchema  = {
     "proj_name" : String,
     "proj_created" : String,
+    "proj_updated" : String,
 	"proj_posts" : [
 	{
       		"post_media" : [
