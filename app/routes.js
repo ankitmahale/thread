@@ -31,12 +31,12 @@ module.exports = function(app, passport) {
 	app.get('/signup', function(req, res) {
          
 		// render the page and pass in any flash data if it exists
-		res.status(200).json({message:'Email id already found!', success: false});
+		res.status(200).json({message:'Email id already found!', "status": false});
 	});
 
 	app.get('/signupsuccess', function(req, res) {
 
-		res.status(200).json({message:'Successfully signed In', success: true});
+		res.status(200).json({message:'Successfully signed In', "status": true});
 	});
 		
 	// process the signup form
