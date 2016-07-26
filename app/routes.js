@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
 	// show the login form
 	app.get('/login', function(req, res) {
 
-		res.status(200).json({message:'Failed to login', success: false});
+		res.status(200).json({message:'Failed to login', "status": false});
 	});
 
 	// process the login form
