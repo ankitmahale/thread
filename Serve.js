@@ -50,9 +50,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        var response = {};
        obj_users.find({"usr_username": req.query.usr_username},{"usr_username":1},function(err,data){
         if(err) {
-                response = {"success" : false,"message" : "Error fetching Username"};
+                response = {"status" : false,"message" : "Error fetching Username"};
             } else {
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
             }
        res.json(response);
        });
@@ -65,9 +65,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        var response = {};
        obj_users.find({"usr_email": req.query.usr_email},{"usr_email":1},function(err,data){
         if(err) {
-                response = {"success" : false,"message" : "Error fetching email"};
+                response = {"status" : false,"message" : "Error fetching email"};
             } else {
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
             }
        
        
@@ -81,9 +81,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        var response = {};
        obj_users.find({"_id" : req.query.usr_id},function(err,data){
          if(err) {
-                response = {"success" : false,"message" : "Error adding data"};
+                response = {"status" : false,"message" : "Error adding data"};
             } else {
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
             }   
                
           
@@ -122,24 +122,22 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
     
       app.put('/updateuserdetails',function(req,res){
         var response = {};
-        obj_users.findById(req.params.usr_id,function(err,data){
+        obj_users.findById(req.body.usr_id,function(err,data){
             if(err) {
-                response = {"success" : false,"message" : "Error fetching the user id"};
+                response = {"status" : false,"message" : "Error fetching the user id"};
             } else {
                 
-                data.usr_email = req.query.usr_email;
-                data.usr_fname = req.query.usr_fname;
-       		    data.usr_lname = req.query.usr_lname;
-                data.usr_img = req.query.usr_img;
+                data.usr_email = req.body.usr_email;
+                data.usr_fname = req.body.usr_fname;
+       		    data.usr_lname = req.body.usr_lname;
+                data.usr_img = req.body.usr_img;
                 data.usr_passion = req.body.usr_passion;
-                
-                
                 
                 data.save(function(err){
                     if(err) {
-                        response = {"success" : false,"message" : "Error updating data"};
+                        response = {"status" : false,"message" : "Error updating data"};
                     } else {
-                        response = {"success" : true, "message" : "Data is updated for "+req.params.id};
+                        response = {"status" : true, "message" : "Data is updated for "+req.params.id};
                     }
                     res.json(response);
                 })
@@ -153,14 +151,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        
         obj_users.find({"_id": req.query.usr_id },function(err,data){
         if(err) {
-                response = {"success" : false,"message" : "Error deleting user!"};
+                response = {"status" : false,"message" : "Error deleting user!"};
             }
          if(data==null) {
-                response = {"success" : false,"message" : "User not found!"};
+                response = {"status" : false,"message" : "User not found!"};
             }   
         if(!err && data!=null)
         {
-              response={response , "success" : true ,"message" : "Successfully deleted!"};
+              response={response , "status" : true ,"message" : "statusfully deleted!"};
         }    
         res.json(response);
         
@@ -183,9 +181,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        	
         db.save(function(err,val){
             if(err) {
-                response = {"success" : false,"message" : "Error adding data"};
+                response = {"status" : false,"message" : "Error adding data"};
             } else {
-                response = {"success" : true,"message" : val._id};
+                response = {"status" : true,"message" : val._id};
             }
             
             res.json(response);
@@ -198,9 +196,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        obj_project.find({"_id": req.query.proj_id},function(err,data){
        
        if(err) {
-                response = {"success" : false,"message" : "Error adding data"};
+                response = {"status" : false,"message" : "Error adding data"};
             } else {
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
             }
        
        res.json(response);
@@ -213,7 +211,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
         var response = {};
         obj_project.findById(req.query.proj_id,function(err,data){
             if(err) {
-                response = {"success" : false,"message" : "Error finding the project id"};
+                response = {"status" : false,"message" : "Error finding the project id"};
             } else {
                 
                 data.proj_name = req.body.proj_name;
@@ -227,9 +225,9 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
                 
                 data.save(function(err){
                     if(err) {
-                        response = {"success" : false,"message" : "Error updating project data"};
+                        response = {"status" : false,"message" : "Error updating project data"};
                     } else {
-                        response = {"success" : true, "message" : "Project Data is updated for "+ req.query.proj_id};
+                        response = {"status" : true, "message" : "Project Data is updated for "+ req.query.proj_id};
                     }
                     res.json(response);
                 })
@@ -241,24 +239,63 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
     app.delete('/deleteproject',function(req,res){
         var response = {};
        
-        obj_project.find({"_id": req.query.proj_id},function(err,data){
+        obj_project.findById({"_id": req.body.proj_id},function(err,data){
         if(err) {
-                response = {"success" : false,"message" : "Error deleting project!"};
+                response = {"status" : false,"message" : "Error deleting project!"};
             }
-         if(data==null) {
-                response = {"success" : false,"message" : "Project not found!"};
-            }   
+       /*  if(Buffer.byteLength(data, 'utf8')==0) {
+                response = {"status" : false,"message" : "Project not found!"};
+            }   */
         if(!err && data!=null)
         {
-              response={response , "success" : true ,"message" : "Successfully deleted!"};
+        	console.log(res);
+              response={response , "status" : true ,"message" : "successfully deleted!"};
         }    
         res.json(response);
         
         }).remove().exec();
     })
       
-      
-     app.put("/addteammembers",function(req,res){
+ ////////////     
+ /*app.delete('/projdel', function(req, res, next) {
+  obj_project.findById(req.params.proj_id, function (err, article) {
+    if(err) { return next(err); }
+    if(!article) { return res.send(404); }
+    else{
+    article.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(204);
+    });}
+  });
+});*/
+
+
+app.delete('/projdel', function (req, res) {
+    obj_project.findById({"_id" : req.params.proj_id})
+        .exec(function(err, doc) {
+            if (err || !doc) {
+                res.statusCode = 404;
+                res.send({});
+            } else {
+                doc.remove(function(err) {
+                    if (err) {
+                        res.statusCode = 403;
+                        res.send(err);
+                    } else {
+                        res.send({});
+                    }
+                });
+            }
+        });
+});
+ 
+
+
+
+  /////////    
+    
+    
+    app.put("/addteammembers",function(req,res){
        var response = {};
      
        obj_project.update(
@@ -269,13 +306,10 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
     }},function(err,data){
        
        if(err) {
-                response = {"success" : false,"message" : "Error updating team members"};
+                response = {"status" : false,"message" : "Error updating team members"};
             } else {
-                
-                
-                response = {"success" : true, "message" : data};
-                
-                
+                response = {"status" : true, "message" : data};
+             
             }
        
        res.json(response);
@@ -293,11 +327,11 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
     }},function(err,data){
        
        if(err) {
-                response = {"success" : false,"message" : "Error updating team members"};
+                response = {"status" : false,"message" : "Error updating team members"};
             } else {
                 
                 
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
                 
                 
             }
@@ -318,11 +352,11 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
     }},function(err,data){
        
        if(err) {
-                response = {"success" : false,"message" : "Error updating team members"};
+                response = {"status" : false,"message" : "Error updating team members"};
             } else {
                 
                 
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
                 
                 
             }
@@ -342,11 +376,11 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
     }},function(err,data){
        
        if(err) {
-                response = {"success" : false,"message" : "Error updating team members"};
+                response = {"status" : false,"message" : "Error updating team members"};
             } else {
                 
                 
-                response = {"success" : true, "message" : data};
+                response = {"status" : true, "message" : data};
                 
                 
             }
@@ -355,6 +389,42 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        });
     })
 
+    
+    app.put("/addpost",function(req,res){
+       var response = {};
+     
+       obj_projects.update(
+       {"_id" : req.body.proj_id},{$push:{"proj_posts":
+        {
+            "post_media" : req.body.post_media,
+            "post_likes" : req.body.post_likes,
+            "post_story" : req.body.post_story,
+            "post_created" : new Date().toUTCString(),
+            "post_tags" : req.body.post_tags,
+            "post_usr_id" : req.body.post_usr_id,
+            "post_comments" : req.body.post_comments
+            
+            
+        },
+        "proj_updated" : new Date().toUTCString()
+        
+    }},function(err,data){
+       
+       if(err) {
+                response = {"status" : false,"message" : "Error updating team members"};
+            } else {
+                response = {"status" : true, "message" : data};
+            
+            }
+       
+       res.json(response);
+       });
+    })
+    
+    
+    
+    
+    
     
     
     
