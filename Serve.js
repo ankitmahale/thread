@@ -79,7 +79,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
   
    app.get("/userdetails",function(req,res){
        var response = {};
-       obj_users.find({"_id" : req.query.usr_id},function(err,data){
+       obj_users.find({"_id" : req.query.usr_id},{usr_projs:1},function(err,data){
          if(err) {
                 response = {"status" : false,"message" : "Error adding data"};
             } else {
@@ -393,8 +393,10 @@ app.delete('/projdel', function (req, res) {
     app.put("/addpost",function(req,res){
        var response = {};
      
-       obj_projects.update(
-       {"_id" : req.body.proj_id},{$push:{"proj_posts":
+       obj_project.update(
+       {"_id" : req.body.proj_id},{"proj_updated" : new Date().toUTCString(), $push:{
+       
+       "proj_posts":
         {
             "post_media" : req.body.post_media,
             "post_likes" : req.body.post_likes,
@@ -403,17 +405,15 @@ app.delete('/projdel', function (req, res) {
             "post_tags" : req.body.post_tags,
             "post_usr_id" : req.body.post_usr_id,
             "post_comments" : req.body.post_comments
-            
-            
-        },
-        "proj_updated" : new Date().toUTCString()
-        
+          
+        }
+    
     }},function(err,data){
        
        if(err) {
                 response = {"status" : false,"message" : "Error updating team members"};
             } else {
-                response = {"status" : true, "message" : data};
+                response = {"status" : true, "message" : console.log(data)};
             
             }
        
