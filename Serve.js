@@ -198,7 +198,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
        if(err) {
                 response = {"status" : false,"message" : "Error adding data"};
             } else {
-                response = {"status" : true, "message" : data};
+                response = {"status" : true, "message" : data[0]};
             }
        
        res.json(response);
