@@ -83,7 +83,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
          if(err) {
                 response = {"status" : false,"message" : "Error adding data"};
             } else {
-                response = {"status" : true, "message" : data};
+                response = {"status" : true, "usr_projs" : data[0].usr_projs};
             }   
                
           
@@ -137,7 +137,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
                     if(err) {
                         response = {"status" : false,"message" : "Error updating data"};
                     } else {
-                        response = {"status" : true, "message" : "Data is updated for "+req.params.id};
+                        response = {"status" : true, "message" : "Data is updated for "+req.body.id};
                     }
                     res.json(response);
                 })
