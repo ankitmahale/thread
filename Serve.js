@@ -407,13 +407,12 @@ app.delete('/projdel', function (req, res) {
             "post_comments" : req.body.post_comments
           
         }
-    
     }},function(err,data){
        
        if(err) {
                 response = {"status" : false,"message" : "Error updating team members"};
             } else {
-                response = {"status" : true, "message" : console.log(data)};
+                response = {"status" : true, "message" : console.log(req)};
             
             }
        
@@ -422,6 +421,43 @@ app.delete('/projdel', function (req, res) {
     })
     
     
+      app.get("/postdetails",function(req,res){
+       var response = {};
+       obj_project.find({"_id": req.query.proj_id},{"proj_posts" : 1},function(err,data){
+       
+       if(err) {
+                response = {"status" : false,"message" : "Error fetching data"};
+            } else {
+                response = {"status" : true, "proj_posts" : data[0].proj_posts};
+            }
+       
+       res.json(response);
+       });
+    })
+    
+    
+    app.put("/deletepost",function(req,res){
+       var response = {};
+     
+       obj_project.update(
+       {"_id" : req.body.proj_id},{$pull:{"proj_posts":
+        {
+            "_id" : req.body.post_id
+        }
+    }},function(err,data){
+       
+       if(err) {
+                response = {"status" : false,"message" : "Error updating team members"};
+            } else {
+                
+                
+                response = {"status" : true, "message" : data};
+                
+            }
+       
+       res.json(response);
+       });
+    })
     
     
     
