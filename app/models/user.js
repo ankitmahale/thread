@@ -10,7 +10,6 @@ var userSchema = mongoose.Schema(
     
     "email" : String,
     "password" : String,
-    
     "usr_img" : String,
     "usr_fname" : String,
     "usr_lname" : String,

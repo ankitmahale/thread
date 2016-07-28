@@ -127,10 +127,12 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
                 response = {"status" : false,"message" : "Error fetching the user id"};
             } else {
                 
-                data.usr_email = req.body.usr_email;
+                data.email = req.body.usr_email;
+                
                 data.usr_fname = req.body.usr_fname;
        		    data.usr_lname = req.body.usr_lname;
                 data.usr_img = req.body.usr_img;
+                data.usr_username = req.body.usr_username;
                 data.usr_passion = req.body.usr_passion;
                 
                 data.save(function(err){
