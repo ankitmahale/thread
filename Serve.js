@@ -135,6 +135,8 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
                 data.usr_username = req.body.usr_username;
                 data.usr_passion = req.body.usr_passion;
                 
+                
+                
                 data.save(function(err){
                     if(err) {
                         response = {"status" : false,"message" : "Error updating data"};
