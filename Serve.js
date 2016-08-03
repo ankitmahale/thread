@@ -48,6 +48,11 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 
    app.get('/uniqueusername',function(req,res){
        var response = {};
+       if(req.query.usr_username==null || req.query.usr_username=="")
+       {
+           response= {"status" : false, "message" : "Username cannot be null"}
+           res.json(response);
+       }
        obj_users.find({"usr_username": req.query.usr_username},{"usr_username":1},function(err,data){
         if(err) {
                 response = {"status" : false,"message" : "Error fetching Username"};
@@ -63,7 +68,13 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
    
    app.get("/uniqueemail",function(req,res){
        var response = {};
-       obj_users.find({"usr_email": req.query.usr_email},{"usr_email":1},function(err,data){
+       if(req.query.email==null || req.query.email=="")
+       {
+           response= {"status" : false, "message" : "Email cannot be null"}
+           res.json(response);
+       }
+       obj_users.find({"email": req.query.email},{"email":1},function(err,data){
+
         if(err) {
                 response = {"status" : false,"message" : "Error fetching email"};
             } else {
@@ -90,6 +101,23 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
            res.json(response);
        });
    })
+   
+   app.get("/usrdetails",function(req,res){
+       var response = {};
+       obj_users.find({"_id" : req.query.usr_id},function(err,data){
+         if(err) {
+                response = {"status" : false,"message" : "Error adding data"};
+            } else {
+                response = {"status" : true, "usr_projs" : data};
+            }   
+               
+          
+           res.json(response);
+       });
+   })
+   
+   
+   
 
   /*  
      router.route("/register")
@@ -413,7 +441,7 @@ app.delete('/projdel', function (req, res) {
     }},function(err,data){
        
        if(err) {
-                response = {"status" : false,"message" : "Error updating team members"};
+                response = {"status" : false,"message" : "Error adding post"};
             } else {
                 response = {"status" : true, "message" : console.log(req)};
             
@@ -464,6 +492,20 @@ app.delete('/projdel', function (req, res) {
     
     
     
+      
+   app.get("/autopredictname",function(req,res){
+       var response = {};
+       //obj_users.find({usr_username: { $regex: '\^a.*$' }},function(err,data){
+      obj_users.find({ $or : [{usr_username: { $regex:'\^'+req.query.name+'.*$'}} , {email : {$regex: '\^'+req.query.name+'.*$' }} ] },{email:1,usr_username:1},function(err,data){
+       if(err) {
+                response = {"status" : false,"message" : "Error fetching data"};
+            } else {
+                response = {"status" : true,"message" : data};
+            }
+            
+       res.json(response);
+       });
+   })
     
     
     

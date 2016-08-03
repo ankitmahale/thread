@@ -29,7 +29,8 @@ var projectSchema  = {
       			"post_comment" : String
     		}
     ]
-    }],  
+    }], 
+    "proj_creator" : String,
     "proj_desc" : String,
     "proj_category" : String,
     "proj_team_members" : [
