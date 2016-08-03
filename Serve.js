@@ -90,9 +90,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
   
    app.get("/userdetails",function(req,res){
        var response = {};
+       if(req.query.usr_id==null || req.query.usr_id=="")
+       {
+           response= {"status" : false, "message" : "User id cannot be null"}
+           res.json(response);
+       }
        obj_users.find({"_id" : req.query.usr_id},{usr_projs:1},function(err,data){
          if(err) {
-                response = {"status" : false,"message" : "Error adding data"};
+                response = {"status" : false,"message" : "Error Fetching data"};
             } else {
                 response = {"status" : true, "usr_projs" : data[0].usr_projs};
             }   
@@ -104,9 +109,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
    
    app.get("/usrdetails",function(req,res){
        var response = {};
+       if(req.query.usr_id==null || req.query.usr_id=="")
+       {
+           response= {"status" : false, "message" : "User id cannot be null"}
+           res.json(response);
+       }
        obj_users.find({"_id" : req.query.usr_id},{usr_projs:0},function(err,data){
          if(err) {
-                response = {"status" : false,"message" : "Error adding data"};
+                response = {"status" : false,"message" : "Error Fetching data"};
             } else {
                 response = {"status" : true, "message" : data};
             }   
