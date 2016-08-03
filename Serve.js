@@ -104,7 +104,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
    
    app.get("/usrdetails",function(req,res){
        var response = {};
-       obj_users.find({"_id" : req.query.usr_id},function(err,data){
+       obj_users.find({"_id" : req.query.usr_id},{usr_projs:0},function(err,data){
          if(err) {
                 response = {"status" : false,"message" : "Error adding data"};
             } else {
