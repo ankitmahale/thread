@@ -48,6 +48,11 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 
    app.get('/uniqueusername',function(req,res){
        var response = {};
+       if(req.query.usr_username==null || req.query.usr_username=="")
+       {
+           response= {"status" : false, "message" : "Username cannot be null"}
+           res.json(response);
+       }
        obj_users.find({"usr_username": req.query.usr_username},{"usr_username":1},function(err,data){
         if(err) {
                 response = {"status" : false,"message" : "Error fetching Username"};
@@ -63,7 +68,13 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
    
    app.get("/uniqueemail",function(req,res){
        var response = {};
-       obj_users.find({"usr_email": req.query.usr_email},{"usr_email":1},function(err,data){
+       if(req.query.email==null || req.query.email=="")
+       {
+           response= {"status" : false, "message" : "Email cannot be null"}
+           res.json(response);
+       }
+       obj_users.find({"email": req.query.email},{"email":1},function(err,data){
+
         if(err) {
                 response = {"status" : false,"message" : "Error fetching email"};
             } else {
@@ -79,9 +90,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
   
    app.get("/userdetails",function(req,res){
        var response = {};
+       if(req.query.usr_id==null || req.query.usr_id=="")
+       {
+           response= {"status" : false, "message" : "User id cannot be null"}
+           res.json(response);
+       }
        obj_users.find({"_id" : req.query.usr_id},{usr_projs:1},function(err,data){
          if(err) {
-                response = {"status" : false,"message" : "Error adding data"};
+                response = {"status" : false,"message" : "Error Fetching data"};
             } else {
                 response = {"status" : true, "usr_projs" : data[0].usr_projs};
             }   
@@ -90,37 +106,54 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
            res.json(response);
        });
    })
-
-  /*  
-     router.route("/register")
-     .post(function(req,res){
-        var db = new obj_users();    
-        var response = {};
-        db.usr_email = req.body.email;
-        db.usr_pwd = req.body.password;
-        db.usr_fname = req.body.fname;
-        db.usr_lname = req.body.lname;
-        db.usr_img = req.body.img;
-        db.usr_username = req.body.username;
-        db.usr_dob = req.body.dob;
-        db.usr_created = new Date().toUTCString();
-       	db.usr_passion = req.body.passion;
-      
-       	
-        db.save(function(err,val){
-            if(err) {
-                response = {"error" : true,"message" : "Error adding data"};
+   
+   app.get("/usrdetails",function(req,res){
+       var response = {};
+       if(req.query.usr_id==null || req.query.usr_id=="")
+       {
+           response= {"status" : false, "message" : "User id cannot be null"}
+           res.json(response);
+       }
+       obj_users.find({"_id" : req.query.usr_id},{usr_projs:0},function(err,data){
+         if(err) {
+                response = {"status" : false,"message" : "Error Fetching data"};
             } else {
-                response = {"error" : false,"message" : "Data added"};
-            }
-            
-            res.json(response);
-        });
+                response = {"status" : true, "message" : data};
+            }   
+               
+          
+           res.json(response);
+       });
+   })
+   
+   /*
+   app.get("/feeds",function(req,res){
+       var response = {};
+    var db = new obj_project();
+   //obj_project.find({},{"sort" : [['proj_post', 'asc']]},{"proj_name" : 1}, function (err, docs) { 
+   db.find.sort({"proj_created" : 1}, function (err, docs) { 
+   
+   response={"status" : docs};
+   res.json(response);
+})
+     
+  }) 
   
-})    
-*/
-    
-      app.put('/updateuserdetails',function(req,res){
+   */
+   
+   
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   app.put('/updateuserdetails',function(req,res){
         var response = {};
         obj_users.findById(req.body.usr_id,function(err,data){
             if(err) {
@@ -167,7 +200,14 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
         
         }).remove().exec();
     })
+    /*
     
+    db.trial.find(
+   { proj_posts: { $elemMatch: { dataAdded: { $gte: ISODate("2015-08-01T00:00:00.000Z") } } } }
+).sort({"proj_posts.dataAdded" : -1})
+    
+    
+    */
    
      app.post('/addproject', function(req,res){
         var db = new obj_project();    
@@ -413,7 +453,7 @@ app.delete('/projdel', function (req, res) {
     }},function(err,data){
        
        if(err) {
-                response = {"status" : false,"message" : "Error updating team members"};
+                response = {"status" : false,"message" : "Error adding post"};
             } else {
                 response = {"status" : true, "message" : console.log(req)};
             
@@ -464,9 +504,53 @@ app.delete('/projdel', function (req, res) {
     
     
     
+      
+   app.get("/autopredictname",function(req,res){
+       var response = {};
+       //obj_users.find({usr_username: { $regex: '\^a.*$' }},function(err,data){
+      obj_users.find({ $or : [{usr_username: { $regex:'\^'+req.query.name+'.*$'}} , {email : {$regex: '\^'+req.query.name+'.*$' }} ] },{email:1,usr_username:1},function(err,data){
+       if(err) {
+                response = {"status" : false,"message" : "Error fetching data"};
+            } else {
+                response = {"status" : true,"message" : data};
+            }
+            
+       res.json(response);
+       });
+   })
+    
+    
+    app.get("/feeds",function(req,res){
+      var response = {};
+      var isodate = new Date().toISOString()
+      console.log(isodate);
+      var year=req.query.year;
+      var month=req.query.month;
+      var day=req.query.day;
+      var hour=req.query.hour;
+      var min=req.query.min;
+      var sec=req.query.sec;
+      var dateString= year+"-"+month+"-"+day+"T"+hour+":"+min+":"+sec+".000Z";
+      console.log(dateString);
+      obj_project.aggregate(  
+      
+    { $match: {}},
+    { $unwind: '$proj_posts'},
+    { $match: {'proj_posts.post_created': {$gte: new Date(dateString) , $lte: new Date(isodate)}}},
+    { $group: {_id: '$_id',proj_name: { "$first": "$proj_name" }, proj_posts: {$push: '$proj_posts'}}},
+   
     
     
     
+    function(err, summary) {
+        
+        response={"data" : summary}
+        res.json(response);
+    }
+);
+      
+    
+    })
     
 
 
@@ -601,7 +685,22 @@ app.delete('/projdel', function (req, res) {
     });
     
    
+    //////////
     
+    db.projects.aggregate(
+    { $match: {}},
+    { $unwind: '$proj_posts'},
+    { $match: {'proj_posts.post_created': {$gte: ISODate('2016-08-01T14:56:59.301Z') , $lte: ISODate('2016-08-30T14:56:59.301Z')}}},
+    { $group: {_id: '$_id', proj_posts: {$push: '$proj_posts'}}},
+    { $sort : { 'proj_posts.post_created' : -1 } }
+    
+    )
+    
+    
+    
+    
+    
+    /////////
     
     
     
